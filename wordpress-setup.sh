@@ -18,7 +18,7 @@ then
 fi 
 echo "Please enter a domain name:"
 read domain
-hostip=`ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v 'hostip' | grep -v '172.*.*.*'`
+hostip=`ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | grep -v '172.*.*.*'`
 sudo chmod a+wx /etc/hosts 
 echo "$hostip	$domain" >> /etc/hosts
 sudo chmod a-w /etc/hosts
@@ -30,7 +30,7 @@ sed --in-place 's/index.nginx-debian.html/index.php/g' /etc/nginx/sites-availabl
 sed -i '52 s/#//' /etc/nginx/sites-available/$domain.conf
 sed -i '53 s/#//' /etc/nginx/sites-available/$domain.conf
 sed -i '58 s/#//' /etc/nginx/sites-available/$domain.conf
-sed -i '58 s/#//' /etc/nginx/sites-available/$domain.conf
+sed -i '59 s/#//' /etc/nginx/sites-available/$domain.conf
 sudo chmod 755 -R /etc/nginx/sites-available /etc/nginx/sites-available/$domain.conf
 sudo ln -sf /etc/nginx/sites-available/$domain.conf /etc/nginx/sites-enabled/$domain.conf
 sudo unlink /etc/nginx/sites-enabled/default
