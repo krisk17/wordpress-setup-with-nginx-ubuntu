@@ -5,10 +5,20 @@ case $1 in
     post)
 	case $2 in
 		add)
-			if ([ ! -z "$3" -a "$3" != " " ] && [ ! -z "$3" -a "$4" != " " ])
+			if ([ ! -z "$3" -a "$3" != " " ] && [ ! -z "$4" -a "$4" != " " ])
 			then
 				sqlite3 blog "insert into post(tilte,content) values('$3','$4');"				
-			fi		
+			fi	
+			if ([ ! -z "$3" -a "$3" != " " ] && [ ! -z "$4" -a "$4" != " " ] && [  "$5" == "--category" ] && [ ! -z "$6" -a "$6" != " " ])
+			then
+				sqlite3 blog "insert into post(tilte,content) values('$3','$4');"
+				sqlite3 blog "insert into assign(post_id,cat_id) values($3,$4);"
+				cat=`sqlite3 blog "select * from category where name = '$6';"`	
+				if [ ! -z "$cat" -a "$cat" != " " ]
+				then
+					sqlite3 blog "insert into category (name) values('$6');"
+				fi
+			fi	
 		;;
 		list)
 			sqlite3 blog "select * from post;"
@@ -31,13 +41,21 @@ case $1 in
     category)
 	case $2 in
 		add)
+			if [ ! -z "$3" -a "$3" != " " ]
+                        then
+                                sqlite3 blog "insert into category (name) values('$3');"
+                        fi
 
                 ;;
                 list)
-
+			sqlite3 blog "select * from category;"
                 ;;
                 assign)
-
+			if ([ ! -z "$3" -a "$3" != " " ] && [ ! -z "$4" -a "$4" != " " ])
+                        then
+                                sqlite3 blog "insert into assign(post_id,cat_id) values($3,$4);"
+                        fi
+	
                 ;;
                 *)
                         echo "Usage: $0 --help"
