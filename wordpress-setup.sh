@@ -2,12 +2,12 @@
 php -version > /dev/null # check php installed or not; if not next step to install it.
 if [ $? != 0 ] 
 then
-	sudo apt-get install -y php php-cgi
+	sudo apt-get install -y php php-cgi php-fpm
 fi
 mysql -V > /dev/null # check mysql server installed or not; if not next step to install it.
 if [ $? != 0 ] 
 then
-	sudo apt-get install -y mysql-server mysql-client
+	sudo apt-get install -y mysql-server mysql-client php-mysql
 	sudo service mysql start
 fi 
 nginx -V 2> /dev/null # check nginx installed or not; if not next step to install it.
@@ -29,6 +29,7 @@ sed --in-place 's/server_name\ _;/server_name\ '$domain';/g' /etc/nginx/sites-av
 sed --in-place 's/index.nginx-debian.html/index.php/g' /etc/nginx/sites-available/$domain.conf
 sed -i '52 s/#//' /etc/nginx/sites-available/$domain.conf
 sed -i '53 s/#//' /etc/nginx/sites-available/$domain.conf
+sed -i '57 s/#//' /etc/nginx/sites-available/$domain.conf
 sed -i '58 s/#//' /etc/nginx/sites-available/$domain.conf
 sed -i '59 s/#//' /etc/nginx/sites-available/$domain.conf
 sudo chmod 755 -R /etc/nginx/sites-available /etc/nginx/sites-available/$domain.conf
